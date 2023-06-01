@@ -1,0 +1,105 @@
+{%extends 'base.html'%}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block inhed %}
+<script>
+$(function() {
+    $('.slider').each(function() {
+        let $th = $(this);
+        $th.attr('data-pos', 1);
+        let slide = $th.find('.slider-slide');
+        let num = $th.find('.slider-slide').length;
+        let dots = $th.find('.slider-dots');
+        dots.prepend('<span class="slider-indicator"></span>');
+        for( let i = 1; i <= num; i++ ){
+            dots.append('<span style="width:' + 100 / num + '%" class="slider-dot border" data-pos="'+ i +'"></span>');
+        }
+        $th.find('.slider-slides').css('width', 100 * num + '%');
+        slide.css('width', 100 / num + '%');
+        $th.find('.slider-dot').on('click', function(){
+            let currentPos = $th.attr('data-pos');
+            let newPos = $(this).attr('data-pos');
+            let newDirection = (newPos > currentPos ? 'right' : 'left');
+            let currentDirection = (newPos < currentPos ? 'right' : 'left');
+            $th.find('.slider-indicator').removeClass('slider-indicator-' + currentDirection);
+            $th.find('.slider-indicator').addClass('slider-indicator-' + newDirection);
+            $th.attr('data-pos', newPos);
+            $th.find('.slider-slides').css('transform', 'translateX(-' + 100 / num * (newPos - 1) + '%)');
+            $th.find('.slider-indicator').css({'left': 100 / num * (newPos - 1) + '%','right':100 - (100 / num) - 100 / num * (newPos - 1) + '%'});
+        });
+        $th.find('.slider-indicator').css({'left': 0,'right': 100 - (100 / num) + '%'});
+    });
+});
+</script>
+<style>
+.slider {
+    position: relative;
+    height: 48%;
+    margin: 20px 0;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 16px 20px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+.slider-slides {
+    position: relative;
+    height: 100%;
+    transition: transform 0.3s cubic-bezier(0.51, 0.92, 0.24, 1);
+    will-change: transform;
+}
+.slider-slide {
+    float: left;
+    height: 100%;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+.slider-dots {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+}
+.slider-dot,
+.slider-indicator {
+    display: block;
+    margin: 0 5px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    cursor: pointer;
+}
+.slider-indicator {
+    position: absolute;
+    background: white;
+    width: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 16px 20px rgba(0,0,0,0.2);
+}
+.slider-indicator-left {
+    transition: left 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.15), right 0.3s 0.1s cubic-bezier(0.51, 0.92, 0.24, 1.15);
+}
+.slider-indicator-right {
+    transition: left 0.3s 0.1s cubic-bezier(0.51, 0.92, 0.24, 1.15), right 0.3s cubic-bezier(0.51, 0.92, 0.24, 1.15);
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <main class="px-3 my-3">
+        <h1 class="my-3">Главная электронного журнала КМПО РАНХиГС</h1>
+        <p class="lead">Пожалйста, перейдите в необходимый раздел в меню навигации</p>
+    </main>
+    <div class="slider mt-5">
+        <div class="slider-slides">
+            <div class="slider-slide" style="background-image: url({{ url_for('static', filename='images/sl4.png') }});"></div>
+            <div class="slider-slide" style="background-image: url({{ url_for('static', filename='images/sl1.png') }});"></div>
+            <div class="slider-slide" style="background-image: url({{ url_for('static', filename='images/sl2.png') }});"></div>
+            <div class="slider-slide" style="background-image: url({{ url_for('static', filename='images/sl3.png') }});"></div>
+        </div>
+        <div class="slider-dots"></div>
+    </div>
+</div>
+{% endblock %}
